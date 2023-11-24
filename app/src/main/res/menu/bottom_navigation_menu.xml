@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_news"
+        android:title="Tin tức"
+        android:icon="@drawable/icon_news" />
+
+    <item
+        android:id="@+id/navigation_schedule"
+        android:title="Lịch Học"
+        android:icon="@drawable/ic_schedule" />
+
+    <item
+        android:id="@+id/navigation_grades"
+        android:title="Điểm"
+        android:icon="@drawable/ic_grades" />
+
+    <item
+        android:id="@+id/navigation_utility"
+        android:title="Tiện ích"
+        android:icon="@drawable/ic_account" />
+</menu>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Password"
+        android:background="@drawable/edt_text_bg"
+        android:paddingLeft="20dp"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/edt_text_bg"
+        android:paddingLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:hint="Name" />
+
+    <!-- Thêm avatar hoặc hình ảnh tùy thuộc vào yêu cầu -->
+    <ImageView
+        android:id="@+id/avatarImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/avatar" />
+
+</LinearLayout>

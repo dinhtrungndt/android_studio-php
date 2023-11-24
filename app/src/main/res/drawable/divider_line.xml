@@ -1,0 +1,8 @@
+<!-- res/drawable/divider_line.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#DDDDDD"
+        android:endColor="#DDDDDD"
+        android:angle="0"/>
+</shape>

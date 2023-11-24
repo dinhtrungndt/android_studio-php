@@ -1,0 +1,28 @@
+<!-- item_diem.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/edt_text_bg"
+    android:layout_marginBottom="20dp"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/monHocTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Môn học"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/diemTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Điểm"
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
+
+    <!-- Thêm các TextView khác nếu cần -->
+
+</LinearLayout>
