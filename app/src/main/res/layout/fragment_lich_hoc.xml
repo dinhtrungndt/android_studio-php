@@ -73,7 +73,7 @@
 
 <!--    Danh sách lịch học -->
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ListView
         android:id="@+id/recyclerViewLichHoc"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

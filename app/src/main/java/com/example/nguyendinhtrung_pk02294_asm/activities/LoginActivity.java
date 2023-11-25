@@ -3,6 +3,7 @@ package com.example.nguyendinhtrung_pk02294_asm.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +45,9 @@ public class LoginActivity extends AppCompatActivity {
         spinner = findViewById(R.id.planets_spinner);
 
         iRetrofitRouter = RetrofitHelper.createService(IRetrofitRouter.class);
+
+        // Kiểm tra trạng thái đăng nhập
+        checkLoginStatus();
 
         List<String> planets = new ArrayList<>();
         planets.add("            ---------- Chọn cơ sở ----------");
@@ -88,18 +92,16 @@ public class LoginActivity extends AppCompatActivity {
             if (response.isSuccessful()){
                 UserLoginResponse loginResponseDTO = response.body();
                 if (loginResponseDTO.getStatus()) {
-                    Toast.makeText(LoginActivity.this,
-                                    "Success!!!", Toast.LENGTH_LONG)
-                            .show();
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    Toast.makeText(LoginActivity.this, "Success!!!", Toast.LENGTH_LONG).show();
+
+                    // Lưu trạng thái đăng nhập vào SharedPreferences
+                    saveLoginStatus(true);
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
-                    // Lưu trạng thái login/user vào shared preferences
                     finish();
-                }
-                else {
-                    Toast.makeText(LoginActivity.this,
-                                    "Failed!!!", Toast.LENGTH_LONG)
-                            .show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Failed!!!", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -109,4 +111,26 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(">>> login", "onFailure: " + t.getMessage());
         }
     };
+
+    private void saveLoginStatus(boolean isLoggedIn) {
+        // Lưu trạng thái đăng nhập vào SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", isLoggedIn);
+        editor.apply();
+    }
+
+    private void checkLoginStatus() {
+        SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (isLoggedIn) {
+            // Người dùng đã đăng nhập, chuyển hướng đến MainActivity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+
 }

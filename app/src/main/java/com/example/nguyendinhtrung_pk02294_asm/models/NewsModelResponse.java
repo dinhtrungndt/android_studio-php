@@ -5,19 +5,19 @@ import android.widget.ImageView;
 public class NewsModelResponse {
     private int id, user_id, topic_id;
     private String title, content, created_at;
-    private int imageResource;
+    private String image;
 
     public NewsModelResponse() {
     }
 
-    public NewsModelResponse(int id, int user_id, int topic_id, String title, String content, String created_at, int imageResource) {
+    public NewsModelResponse(int id, int user_id, int topic_id, String title, String content, String created_at, String image) {
         this.id = id;
         this.user_id = user_id;
         this.topic_id = topic_id;
         this.title = title;
         this.content = content;
         this.created_at = created_at;
-        this.imageResource = imageResource;
+        this.image = image;
     }
 
     public int getId() {
@@ -68,11 +68,11 @@ public class NewsModelResponse {
         this.created_at = created_at;
     }
 
-    public int getImageResource() {
-        return imageResource;
+    public String getImage() {
+        return image != null ? image : "";
     }
 
-    public void setImageResource(int imageResource) {
-        this.imageResource = imageResource;
+    public void setImage(String image) {
+        this.image = image;
     }
 }

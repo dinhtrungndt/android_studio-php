@@ -1,5 +1,7 @@
 package com.example.nguyendinhtrung_pk02294_asm.fragments;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
@@ -72,10 +74,13 @@ public class TinTucFragment extends Fragment {
         public void onResponse(Call<List<NewsModelResponse>> call, Response<List<NewsModelResponse>> response) {
             if (response.isSuccessful()){
                 List<NewsModelResponse> model = response.body();
-                if (model != null && model.size()>0) {
+                if (model != null && model.size() > 0) {
                     list.clear();
                     list.addAll(model);
                     adapter.notifyDataSetChanged();
+                    for (NewsModelResponse news : list){
+                        Log.d(TAG, ">>>>>>>>>>>>>>>>" + news.getImage());
+                    }
                 }
                 else {
                     Toast.makeText(getActivity(), "Lấy danh sách thất bại", Toast.LENGTH_SHORT).show();

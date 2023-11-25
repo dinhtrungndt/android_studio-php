@@ -16,6 +16,7 @@
         android:theme="@style/Theme.NGUYENDINHTRUNG_PK02294_ASM"
         tools:targetApi="31"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         >
         <activity
             android:name=".activities.RegisterActivity"

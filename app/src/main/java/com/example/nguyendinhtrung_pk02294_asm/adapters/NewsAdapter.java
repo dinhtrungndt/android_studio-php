@@ -1,6 +1,7 @@
 package com.example.nguyendinhtrung_pk02294_asm.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.example.nguyendinhtrung_pk02294_asm.R;
 import com.example.nguyendinhtrung_pk02294_asm.models.NewsModelResponse;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -48,6 +50,7 @@ public class NewsAdapter extends BaseAdapter{
             TextView contentTextView = view.findViewById(R.id.contentTextView);
             TextView timeTextView = view.findViewById(R.id.timeTextView);
             ImageView newsImageView = view.findViewById(R.id.newsImageView);
+
             ViewHolder holder = new ViewHolder(tvNewsTitle, contentTextView,timeTextView,newsImageView);
             view.setTag(holder);
         }
@@ -57,7 +60,14 @@ public class NewsAdapter extends BaseAdapter{
         holder.contentTextView.setText(modelResponse.getContent());
         holder.timeTextView.setText(modelResponse.getCreated_at());
 
-        holder.newsImageView.setImageResource(modelResponse.getImageResource());
+        String imageUrl = modelResponse.getImage();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Picasso.get().load(imageUrl).into(holder.newsImageView);
+        } else {
+            // Handle empty or invalid URLs, e.g., set a placeholder image
+            holder.newsImageView.setImageResource(R.drawable.login);
+        }
+
         return view;
     }
 

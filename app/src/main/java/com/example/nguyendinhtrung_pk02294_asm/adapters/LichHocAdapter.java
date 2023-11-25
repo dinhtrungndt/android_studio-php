@@ -3,6 +3,8 @@ package com.example.nguyendinhtrung_pk02294_asm.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,46 +12,67 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nguyendinhtrung_pk02294_asm.R;
 import com.example.nguyendinhtrung_pk02294_asm.models.LichHocItem;
+import com.example.nguyendinhtrung_pk02294_asm.models.LichHocModelResponse;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class LichHocAdapter extends RecyclerView.Adapter<LichHocAdapter.ViewHolder> {
+public class LichHocAdapter extends BaseAdapter{
+    List<LichHocModelResponse> list;
 
-    private List<LichHocItem> lichHocItems;
-
-    public LichHocAdapter(List<LichHocItem> lichHocItems) {
-        this.lichHocItems = lichHocItems;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lich_hoc, parent, false);
-        return new ViewHolder(view);
+    public LichHocAdapter(List<LichHocModelResponse> list){
+        this.list = list;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        LichHocItem lichHocItem = lichHocItems.get(position);
-        holder.monHocTextView.setText(lichHocItem.getMonHoc());
-        holder.thoiGianTextView.setText(lichHocItem.getThoiGian());
-        // Điền thông tin khác nếu cần
+    public int getCount() {
+        return list.size();
     }
 
     @Override
-    public int getItemCount() {
-        return lichHocItems.size();
+    public Object getItem(int i) {
+        return list.get(i);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView monHocTextView;
-        TextView thoiGianTextView;
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            monHocTextView = itemView.findViewById(R.id.monHocTextView);
-            thoiGianTextView = itemView.findViewById(R.id.thoiGianTextView);
-            // Ánh xạ các TextView khác nếu cần
+    @Override
+    public View getView(int _i, View _view, ViewGroup _viewGroup) {
+        View view = _view;
+        if(view == null){
+            view = View.inflate(_viewGroup.getContext(), R.layout.item_lich_hoc, null);
+            TextView monHocIdTextView = view.findViewById(R.id.monHocIdTextView);
+            TextView diaDiemTextView = view.findViewById(R.id.diaDiemTextView);
+            TextView caTextView = view.findViewById(R.id.caTextView);
+            TextView ngayHocTextView = view.findViewById(R.id.ngayHocTextView);
+            TextView userIdTextView = view.findViewById(R.id.userIdTextView);
+
+            LichHocAdapter.ViewHolder holder = new LichHocAdapter.ViewHolder(monHocIdTextView, diaDiemTextView, caTextView,ngayHocTextView,userIdTextView);
+            view.setTag(holder);
+        }
+        LichHocModelResponse modelResponse = (LichHocModelResponse) getItem(_i);
+        LichHocAdapter.ViewHolder holder = (LichHocAdapter.ViewHolder) view.getTag();
+        holder.monHocIdTextView.setText(String.valueOf(modelResponse.getMonhoc_id()));
+        holder.diaDiemTextView.setText(modelResponse.getDiadiem());
+        holder.caTextView.setText(modelResponse.getCa());
+        holder.ngayHocTextView.setText(modelResponse.getNgayhoc());
+        holder.userIdTextView.setText(String.valueOf(modelResponse.getUser_id()));
+
+        return view;
+    }
+
+    public static class ViewHolder{
+        final TextView monHocIdTextView, diaDiemTextView,caTextView,ngayHocTextView,userIdTextView;
+
+        public ViewHolder(TextView monHocIdTextView, TextView diaDiemTextView, TextView caTextView, TextView ngayHocTextView, TextView userIdTextView){
+            this.monHocIdTextView = monHocIdTextView;
+            this.diaDiemTextView = diaDiemTextView;
+            this.caTextView = caTextView;
+            this.ngayHocTextView = ngayHocTextView;
+            this.userIdTextView = userIdTextView;
         }
     }
 }
