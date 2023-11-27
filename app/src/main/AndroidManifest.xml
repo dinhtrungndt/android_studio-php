@@ -8,16 +8,22 @@
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.NGUYENDINHTRUNG_PK02294_ASM"
-        tools:targetApi="31"
         android:usesCleartextTraffic="true"
-        android:enableOnBackInvokedCallback="true"
-        >
+        tools:targetApi="31">
+        <activity
+            android:name=".SocketActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="true">
