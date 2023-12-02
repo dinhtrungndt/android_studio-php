@@ -1,21 +1,29 @@
 package com.example.nguyendinhtrung_pk02294_asm.models;
 
-public class UserRegisterRequest {
+public class ModelPutUser {
+    private Integer id;
     private String email;
     private String name;
     private String password;
-    private String password_confirm;
     private String avatar;
 
-    public UserRegisterRequest() {
+    public ModelPutUser() {
     }
 
-    public UserRegisterRequest(String email, String name, String password, String password_confirm, String avatar) {
+    public ModelPutUser(Integer id, String email, String name, String password, String avatar) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
-        this.password_confirm = password_confirm;
         this.avatar = avatar;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -40,14 +48,6 @@ public class UserRegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPassword_confirm() {
-        return password_confirm;
-    }
-
-    public void setPassword_confirm(String password_confirm) {
-        this.password_confirm = password_confirm;
     }
 
     public String getAvatar() {

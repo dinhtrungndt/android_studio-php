@@ -18,9 +18,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class LichHocAdapter extends BaseAdapter{
-    List<LichHocModelResponse> list;
+    List<LichHocItem> list;
 
-    public LichHocAdapter(List<LichHocModelResponse> list){
+    public LichHocAdapter(List<LichHocItem> list){
         this.list = list;
     }
 
@@ -47,32 +47,25 @@ public class LichHocAdapter extends BaseAdapter{
             TextView monHocIdTextView = view.findViewById(R.id.monHocIdTextView);
             TextView diaDiemTextView = view.findViewById(R.id.diaDiemTextView);
             TextView caTextView = view.findViewById(R.id.caTextView);
-            TextView ngayHocTextView = view.findViewById(R.id.ngayHocTextView);
-            TextView userIdTextView = view.findViewById(R.id.userIdTextView);
 
-            LichHocAdapter.ViewHolder holder = new LichHocAdapter.ViewHolder(monHocIdTextView, diaDiemTextView, caTextView,ngayHocTextView,userIdTextView);
+            LichHocAdapter.ViewHolder holder = new LichHocAdapter.ViewHolder(monHocIdTextView, diaDiemTextView, caTextView);
             view.setTag(holder);
         }
-        LichHocModelResponse modelResponse = (LichHocModelResponse) getItem(_i);
+        LichHocItem modelResponse = (LichHocItem) getItem(_i);
         LichHocAdapter.ViewHolder holder = (LichHocAdapter.ViewHolder) view.getTag();
-        holder.monHocIdTextView.setText(String.valueOf(modelResponse.getMonhoc_id()));
-        holder.diaDiemTextView.setText(modelResponse.getDiadiem());
-        holder.caTextView.setText(modelResponse.getCa());
-        holder.ngayHocTextView.setText(modelResponse.getNgayhoc());
-        holder.userIdTextView.setText(String.valueOf(modelResponse.getUser_id()));
+        holder.monHocIdTextView.setText(String.valueOf(modelResponse.getMonHoc()));
+        holder.diaDiemTextView.setText(modelResponse.getThoiGian());
 
         return view;
     }
 
     public static class ViewHolder{
-        final TextView monHocIdTextView, diaDiemTextView,caTextView,ngayHocTextView,userIdTextView;
+        final TextView monHocIdTextView, diaDiemTextView,caTextView;
 
-        public ViewHolder(TextView monHocIdTextView, TextView diaDiemTextView, TextView caTextView, TextView ngayHocTextView, TextView userIdTextView){
+        public ViewHolder(TextView monHocIdTextView, TextView diaDiemTextView, TextView caTextView){
             this.monHocIdTextView = monHocIdTextView;
             this.diaDiemTextView = diaDiemTextView;
             this.caTextView = caTextView;
-            this.ngayHocTextView = ngayHocTextView;
-            this.userIdTextView = userIdTextView;
         }
     }
 }

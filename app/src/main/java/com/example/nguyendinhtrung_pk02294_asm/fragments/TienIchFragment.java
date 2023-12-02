@@ -1,10 +1,13 @@
 package com.example.nguyendinhtrung_pk02294_asm.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -23,14 +27,17 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.nguyendinhtrung_pk02294_asm.R;
 import com.example.nguyendinhtrung_pk02294_asm.activities.LoginActivity;
+import com.example.nguyendinhtrung_pk02294_asm.activities.ThayDoiActivity;
 import com.example.nguyendinhtrung_pk02294_asm.helpers.IRetrofitRouter;
 import com.example.nguyendinhtrung_pk02294_asm.helpers.RetrofitHelper;
+import com.example.nguyendinhtrung_pk02294_asm.models.UserLoginRequest;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
 public class TienIchFragment extends Fragment {
-    LinearLayout lnCapNhap,lnLogout,lnDoiMK, lnQuenMK;
+    LinearLayout lnCapNhap, lnLogout, lnDoiMK, lnQuenMK;
+    TextView txtThayDoi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +47,7 @@ public class TienIchFragment extends Fragment {
         lnLogout = view.findViewById(R.id.lnLogout);
         lnDoiMK = view.findViewById(R.id.lnDoiMK);
         lnQuenMK = view.findViewById(R.id.lnQuenMK);
+        txtThayDoi = view.findViewById(R.id.txtThayDoi);
 
         lnCapNhap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,12 +73,33 @@ public class TienIchFragment extends Fragment {
         lnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Clear login status
+                clearLoginStatus();
+
+                // Redirect to the login activity
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        txtThayDoi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ThayDoiActivity.class);
                 getActivity().startActivity(intent);
             }
         });
 
         return view;
+    }
+
+    private void clearLoginStatus() {
+        // Clear login status in SharedPreferences
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginStatus", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", false);
+        editor.apply();
     }
 
     private void showChangePasswordDialog() {
@@ -97,6 +126,8 @@ public class TienIchFragment extends Fragment {
                         } else {
                             Toast.makeText(getActivity(), "New Passwords do not match", Toast.LENGTH_SHORT).show();
                         }
+                        UserLoginRequest request = new UserLoginRequest();
+                        request.setPassword(oldPassword);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -126,57 +157,7 @@ public class TienIchFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         progress.setVisibility(View.VISIBLE);
                         String email = emailEditText.getText().toString();
-//                        if(email.equals("")){
-//                            Toast.makeText(getActivity(), "Vui lòng nhập email !", Toast.LENGTH_SHORT).show();
-//                            progress.setVisibility(View.GONE);
-//                        }else {
-//                            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-//                            String url = "http://192.168.11.116:8686/forgot-password.php";
-//
-//                            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-//                                @Override
-//                                public void onResponse(String response) {
-//                                    progress.setVisibility(View.GONE);
-//                                    if (response.equals("status")) {
-//                                        Toast.makeText(getActivity(), "Gửi email thành công !", Toast.LENGTH_SHORT).show();
-//                                    } else {
-//                                        Toast.makeText(getActivity(), "Gửi thất bại !", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                            }, new Response.ErrorListener() {
-//                                @Override
-//                                public void onErrorResponse(VolleyError error) {
-//                                    progress.setVisibility(View.GONE);
-//                                    error.printStackTrace();
-//                                }
-//                            }){
-//                                protected Map<String, String> getParams(){
-//                                    Map<String, String> paramV = new HashMap<>();
-//                                    paramV.put("To email", email);
-//                                    return paramV;
-//                                }
-//                            };
-//
-//                            stringRequest.setRetryPolicy(new RetryPolicy() {
-//                                @Override
-//                                public int getCurrentTimeout() {
-//                                    return 50000;
-//                                }
-//
-//                                @Override
-//                                public int getCurrentRetryCount() {
-//                                    return 50000;
-//                                }
-//
-//                                @Override
-//                                public void retry(VolleyError error) throws VolleyError {
-//
-//                                }
-//                            });
-//                            queue.add(stringRequest);
-//
-//                        }
-                        sendPasswordResetRequest(email);
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -188,32 +169,6 @@ public class TienIchFragment extends Fragment {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    private void sendPasswordResetRequest(String email) {
-        // Sử dụng Retrofit để gửi yêu cầu đến máy chủ với email
-        IRetrofitRouter retrofitRouter = RetrofitHelper.createService(IRetrofitRouter.class);
-        Call<Void> call = retrofitRouter.forgotPassword(email);
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
-                if (response.isSuccessful()) {
-                    // Gửi email thành công, hiển thị thông báo cho người dùng
-                    Toast.makeText(getActivity(), "Password recovery email sent to " + email, Toast.LENGTH_SHORT).show();
-                } else {
-                    // Gửi email thất bại, hiển thị thông báo cho người dùng
-                    Toast.makeText(getActivity(), "Failed to send recovery email", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                // Xử lý lỗi khi kết nối không thành công
-                Toast.makeText(getActivity(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     private void showUpdateProfileDialog() {
@@ -225,9 +180,6 @@ public class TienIchFragment extends Fragment {
         final EditText nameEditText = dialogView.findViewById(R.id.nameEditText);
         final ImageView avatarImageView = dialogView.findViewById(R.id.avatarImageView);
 
-        // Thêm logic để tải và hiển thị hình ảnh avatar từ nguồn dữ liệu nếu cần thiết
-        // Ví dụ: avatarImageView.setImageResource(R.drawable.default_avatar);
-
         builder.setView(dialogView)
                 .setTitle("Update Profile")
                 .setPositiveButton("Update", new DialogInterface.OnClickListener() {
@@ -235,10 +187,7 @@ public class TienIchFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String password = passwordEditText.getText().toString();
                         String name = nameEditText.getText().toString();
-                        // Lấy các giá trị của các trường khác tùy theo yêu cầu
-
-                        // Gọi phương thức để xử lý việc cập nhật hồ sơ với các giá trị mới
-                        updateProfile(password, name /*, otherFields */);
+                        updateProfile(password, name /* , otherFields */);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -252,16 +201,8 @@ public class TienIchFragment extends Fragment {
         dialog.show();
     }
 
-    private void updateProfile(String password, String name /*, otherFields */) {
-        // Thực hiện các thay đổi cần thiết để cập nhật hồ sơ cá nhân
-        // Ví dụ:
-        // userService.updatePassword(password);
-        // userService.updateName(name);
-        // userService.updateOtherFields(otherFields);
-
-        // Hiển thị thông báo cập nhật thành công hoặc xử lý lỗi nếu cần thiết
+    private void updateProfile(String password, String name /* , otherFields */) {
         Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
     }
-
 
 }

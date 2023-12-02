@@ -75,4 +75,8 @@ public class NewsModelResponse {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public int getUserId() {
+        return user_id;
+    }
 }

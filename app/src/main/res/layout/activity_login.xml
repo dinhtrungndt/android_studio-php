@@ -73,13 +73,34 @@
         android:password="true"
         android:background="@drawable/edt_text_bg"/>
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Forget Password ?"
-        android:textColor="@color/black"
-        android:paddingLeft="230dp"
-        android:paddingTop="5dp"/>
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/rememberMeCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remember me"
+            android:textColor="@color/black"
+            android:paddingTop="5dp"/>
+
+        <TextView
+            android:id="@+id/forgetPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forget Password ?"
+            android:textColor="@color/black"
+            android:paddingLeft="35dp"
+            android:paddingTop="5dp"/>
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/btnLogin"

@@ -46,21 +46,4 @@
             android:paddingLeft="10dp"
             android:textColor="@color/black"/>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/ngayHocTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ngày học"
-        android:textSize="14sp"
-        android:textColor="@color/black"/>
-
-    <TextView
-            android:id="@+id/userIdTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mã người dùng"
-        android:textSize="14sp"
-        android:textColor="@color/black"/>
-
 </LinearLayout>

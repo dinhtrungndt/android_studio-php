@@ -5,55 +5,65 @@ import static android.content.ContentValues.TAG;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.example.nguyendinhtrung_pk02294_asm.R;
+import com.example.nguyendinhtrung_pk02294_asm.fragments.TienIchFragment;
 import com.example.nguyendinhtrung_pk02294_asm.helpers.IRetrofitRouter;
 import com.example.nguyendinhtrung_pk02294_asm.helpers.RetrofitHelper;
-import com.example.nguyendinhtrung_pk02294_asm.models.UserLoginRequest;
+import com.example.nguyendinhtrung_pk02294_asm.models.ModelPutUser;
 import com.example.nguyendinhtrung_pk02294_asm.models.UserLoginResponse;
 import com.example.nguyendinhtrung_pk02294_asm.models.UserRegisterRequest;
+
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.cloudinary.android.MediaManager;
-import com.cloudinary.android.callback.ErrorInfo;
-import com.cloudinary.android.callback.UploadCallback;
-
-import java.util.Map;
-
-public class RegisterActivity extends AppCompatActivity {
-    private EditText edtUser, edtName, edtPass, edtPassConfirm;
-    private TextView tvlogin;
-    private Button btnRegister;
+public class ThayDoiActivity extends AppCompatActivity {
+    ImageView cloneTab, imgAvatar,imgSave;
+    EditText edtEmail,edtName,edtPassword;
     private Uri selectedImageUri;
-    private ImageView imgAvatar;
     private String imageUrl;
+    private int id;
 
     IRetrofitRouter iRetrofitRouter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_thay_doi);
 
-        edtUser = findViewById(R.id.edtUser);
-        edtName = findViewById(R.id.edtName);
-        edtPass = findViewById(R.id.edtPass);
-        edtPassConfirm = findViewById(R.id.edtPassConfirm);
         imgAvatar = findViewById(R.id.imgAvatar);
+        imgSave = findViewById(R.id.imgSave);
+        edtEmail = findViewById(R.id.edtEmail);
+        edtName = findViewById(R.id.edtName);
+        edtPassword = findViewById(R.id.edtPassword);
+        cloneTab = findViewById(R.id.cloneTab);
+
+        iRetrofitRouter = RetrofitHelper.createService(IRetrofitRouter.class);
+
+        // Khởi tạo Cloudinary
+        MediaManager.init(this);
+
+        cloneTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         imgAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,45 +75,62 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        tvlogin = findViewById(R.id.tvlogin);
-        btnRegister = findViewById(R.id.btnRegister);
-
-        iRetrofitRouter = RetrofitHelper.createService(IRetrofitRouter.class);
-
-        // Khởi tạo Cloudinary
-        MediaManager.init(this);
-
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        imgSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = edtUser.getText().toString();
+                String email = edtEmail.getText().toString();
                 String name = edtName.getText().toString();
-                String password = edtPass.getText().toString();
-                String PassConfirm = edtPassConfirm.getText().toString();
+                String password = edtPassword.getText().toString();
 
-                UserRegisterRequest request = new UserRegisterRequest();
-                request.setEmail(email);
-                request.setName(name);
-                request.setPassword(password);
-                request.setPassword_confirm(PassConfirm);
-                request.setAvatar(imageUrl);
+                // Retrieve the user ID from SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", MODE_PRIVATE);
+                int userId = sharedPreferences.getInt("userId", -1); // -1 is a default value if the key is not found
 
-                iRetrofitRouter.register(request).enqueue(regisCallback);
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                Toast.makeText(RegisterActivity.this, "Đăng ký thành công !", Toast.LENGTH_SHORT).show();
+                if (userId != -1) {
+                    // User ID is valid, proceed with the request
+                    ModelPutUser request = new ModelPutUser();
+                    request.setId(userId); // Set the retrieved user ID
+                    request.setEmail(email);
+                    request.setName(name);
+                    request.setPassword(password);
+                    request.setAvatar(imageUrl);
 
-                startActivity(intent);
+                    Log.d(TAG, "Email: " + email);
+                    Log.d(TAG, "Name: " + name);
+                    Log.d(TAG, "Password: " + password);
+                    Log.d(TAG, "ImageUrl: " + imageUrl);
+
+                    iRetrofitRouter.putUser(request).enqueue(putCallback);
+                    Intent intent = new Intent(ThayDoiActivity.this, MainActivity.class);
+                    Toast.makeText(ThayDoiActivity.this, "Cập nhập thành công !", Toast.LENGTH_SHORT).show();
+
+                    startActivity(intent);
+                } else {
+                    // Handle the case where the user ID is not available
+                    Toast.makeText(ThayDoiActivity.this, "User ID not found", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        tvlogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume is called");
+
+        // Retrieve information from SharedPreferences and set EditText values
+        SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", "");
+        String name = sharedPreferences.getString("name", "");
+
+        // Set EditText values
+        edtEmail.setText(email);
+        edtName.setText(name);
+        edtPassword.setText("*");
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -135,10 +162,10 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(String requestId, Map resultData) {
                             // Lấy URL của ảnh sau khi tải lên thành công
-                             imageUrl = (String) resultData.get("url");
+                            imageUrl = (String) resultData.get("url");
 
                             // Load selected image into ImageView using Glide
-                            Glide.with(RegisterActivity.this)
+                            Glide.with(ThayDoiActivity.this)
                                     .load(imageUrl)
                                     .into(imgAvatar);
 
@@ -162,18 +189,18 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    Callback<UserLoginResponse> regisCallback = new Callback<UserLoginResponse>() {
+    Callback<UserLoginResponse> putCallback = new Callback<UserLoginResponse>() {
         @Override
         public void onResponse(Call<UserLoginResponse> call, Response<UserLoginResponse> response) {
             if (response.isSuccessful()){
                 UserLoginResponse regisResponseDTO = response.body();
-                if (regisResponseDTO != null && regisResponseDTO.getStatus()) {
-                    Toast.makeText(RegisterActivity.this, "Registration Success!!!", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                if (regisResponseDTO != null && regisResponseDTO.getStatus() != null && regisResponseDTO.getStatus()) {
+                    Toast.makeText(ThayDoiActivity.this, "Registration Success!!!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(ThayDoiActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Registration Failed!!!", Toast.LENGTH_LONG).show();
+
                 }
             }
         }
@@ -183,5 +210,4 @@ public class RegisterActivity extends AppCompatActivity {
             Log.d(">>> register", "onFailure: " + t.getMessage());
         }
     };
-
 }

@@ -1,10 +1,12 @@
 package com.example.nguyendinhtrung_pk02294_asm.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,17 +52,47 @@ public class TinTucFragment extends Fragment {
         lvNews.setAdapter(adapter);
 
         iRetrofitRouter = RetrofitHelper.createService(IRetrofitRouter.class);
-//
-//        lvNews.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                NewsModelResponse selectedNewsModel = (NewsModelResponse) adapter.getItem(position);
-//                showBottomSheet(selectedNewsModel);
-//            }
-//        });
+
+        lvNews.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NewsModelResponse selectedNewsModel = (NewsModelResponse) adapter.getItem(position);
+                fetchNewsDetail(selectedNewsModel.getId());
+            }
+        });
 
 
         return view;
+    }
+
+    private void fetchNewsDetail(int newsId) {
+        // Call the API to fetch news detail by ID
+        iRetrofitRouter.getNewsDetail(newsId).enqueue(new Callback<NewsModelResponse>() {
+            @Override
+            public void onResponse(Call<NewsModelResponse> call, Response<NewsModelResponse> response) {
+                if (response.isSuccessful()) {
+                    NewsModelResponse newsDetail = response.body();
+                    if (newsDetail != null) {
+                        showBottomSheet(newsDetail);
+                    } else {
+                        Toast.makeText(getActivity(), "Failed to get news detail", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NewsModelResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "Failed to get news detail", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showBottomSheet(NewsModelResponse newsModelResponse) {
+        // Tạo một instance của BottomSheetFragment và truyền dữ liệu
+        BottomSheetFragment bottomSheetFragment = new BottomSheetFragment(newsModelResponse);
+
+        // Hiển thị BottomSheet
+        bottomSheetFragment.show(getChildFragmentManager(), bottomSheetFragment.getTag());
     }
 
     @Override
@@ -94,11 +126,6 @@ public class TinTucFragment extends Fragment {
         }
     };
 
-//    private void showBottomSheet(NewsModelResponse newsModelResponse) {
-//        // Tạo một instance của BottomSheetFragment và truyền dữ liệu
-//        BottomSheetFragment bottomSheetFragment = new BottomSheetFragment((NewsData) newsModelResponse);
-//
-//        // Hiển thị BottomSheet
-//        bottomSheetFragment.show(getChildFragmentManager(), bottomSheetFragment.getTag());
-//    }
+
+
 }

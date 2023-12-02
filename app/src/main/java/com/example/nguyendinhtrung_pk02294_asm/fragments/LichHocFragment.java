@@ -31,55 +31,84 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LichHocFragment extends Fragment {
-    ListView lvNews;
-    List<LichHocModelResponse> list;
-    LichHocAdapter adapter;
+//    ListView lvNews;
+//    List<LichHocModelResponse> list;
+//    LichHocAdapter adapter;
+//
+//    IRetrofitRouter iRetrofitRouter;
 
-    IRetrofitRouter iRetrofitRouter;
+    ListView listView;
+    List<LichHocItem> list;
+    LichHocAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lich_hoc, container, false);
 
-        lvNews = view.findViewById(R.id.recyclerViewLichHoc);
+//        lvNews = view.findViewById(R.id.recyclerViewLichHoc);
+//
+//        list = new ArrayList<>();
+//        adapter = new LichHocAdapter(list);
+//        lvNews.setAdapter(adapter);
+//
+//        iRetrofitRouter = RetrofitHelper.createService(IRetrofitRouter.class);
 
+        listView = view.findViewById(R.id.recyclerViewLichHoc);
+
+        // Create sample data
         list = new ArrayList<>();
-        adapter = new LichHocAdapter(list);
-        lvNews.setAdapter(adapter);
+        list.add(new LichHocItem("Lập trình Android", "Thứ 2, 8:00 - 10:00"));
+        list.add(new LichHocItem("Xử lý ảnh", "Thứ 3, 10:30 - 12:30"));
+        list.add(new LichHocItem("Machine Learning", "Thứ 4, 14:00 - 16:00"));
+        list.add(new LichHocItem("Quản trị dự án IT", "Thứ 2, 14:00 - 16:00"));
+        list.add(new LichHocItem("Phân tích yêu cầu hệ thống", "Thứ 3, 8:00 - 10:00"));
+        list.add(new LichHocItem("Cơ sở dữ liệu", "Thứ 4, 10:30 - 12:30"));
+        list.add(new LichHocItem("Kiến trúc phần mềm", "Thứ 5, 14:00 - 16:00"));
+        list.add(new LichHocItem("Tiếng Anh chuyên ngành CNTT", "Thứ 6, 8:00 - 10:00"));
+        list.add(new LichHocItem("Lập trình Android", "Thứ 2, 8:00 - 10:00"));
+        list.add(new LichHocItem("Xử lý ảnh", "Thứ 3, 10:30 - 12:30"));
+        list.add(new LichHocItem("Machine Learning", "Thứ 4, 14:00 - 16:00"));
+        list.add(new LichHocItem("Quản trị dự án IT", "Thứ 2, 14:00 - 16:00"));
+        list.add(new LichHocItem("Phân tích yêu cầu hệ thống", "Thứ 3, 8:00 - 10:00"));
+        list.add(new LichHocItem("Cơ sở dữ liệu", "Thứ 4, 10:30 - 12:30"));
+        list.add(new LichHocItem("Kiến trúc phần mềm", "Thứ 5, 14:00 - 16:00"));
+        list.add(new LichHocItem("Tiếng Anh chuyên ngành CNTT", "Thứ 6, 8:00 - 10:00"));
 
-        iRetrofitRouter = RetrofitHelper.createService(IRetrofitRouter.class);
+        // Create and set the adapter
+        adapter = new LichHocAdapter(list);
+        listView.setAdapter(adapter);
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        iRetrofitRouter.getLichHoc().enqueue(getNewsCallback);
-    }
-
-    Callback<List<LichHocModelResponse>> getNewsCallback = new Callback<List<LichHocModelResponse>>() {
-        @Override
-        public void onResponse(Call<List<LichHocModelResponse>> call, Response<List<LichHocModelResponse>> response) {
-            if (response.isSuccessful()){
-                List<LichHocModelResponse> model = response.body();
-                if (model != null && model.size() > 0) {
-                    list.clear();
-                    list.addAll(model);
-                    adapter.notifyDataSetChanged();
-                    for (LichHocModelResponse news : list){
-                        Log.d(TAG, ">>>>>>>>>>>>>>>>" + news.getCa());
-                    }
-                }
-                else {
-                    Toast.makeText(getActivity(), "Lấy danh sách thất bại", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<List<LichHocModelResponse>> call, Throwable t) {
-            Log.d(">>> getNewsCallback", "onFailure: " + t.getMessage());
-        }
-    };
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        iRetrofitRouter.getLichHoc().enqueue(getNewsCallback);
+//    }
+//
+//    Callback<List<LichHocModelResponse>> getNewsCallback = new Callback<List<LichHocModelResponse>>() {
+//        @Override
+//        public void onResponse(Call<List<LichHocModelResponse>> call, Response<List<LichHocModelResponse>> response) {
+//            if (response.isSuccessful()){
+//                List<LichHocModelResponse> model = response.body();
+//                if (model != null && model.size() > 0) {
+//                    list.clear();
+//                    list.addAll(model);
+//                    adapter.notifyDataSetChanged();
+//                    for (LichHocModelResponse news : list){
+//                        Log.d(TAG, ">>>>>>>>>>>>>>>>" + news.getCa());
+//                    }
+//                }
+//                else {
+//                    Toast.makeText(getActivity(), "Lấy danh sách thất bại", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void onFailure(Call<List<LichHocModelResponse>> call, Throwable t) {
+//            Log.d(">>> getNewsCallback", "onFailure: " + t.getMessage());
+//        }
+//    };
 }
