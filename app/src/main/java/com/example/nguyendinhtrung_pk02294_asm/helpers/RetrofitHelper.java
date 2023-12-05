@@ -7,7 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHelper {
-    private static final String url = "http://192.168.11.116:8686/";
+    private static final String url = "http://172.16.123.185:8686/";
     private static Retrofit build(){
         Gson gson = new GsonBuilder().setLenient().create();
         return new Retrofit.Builder()

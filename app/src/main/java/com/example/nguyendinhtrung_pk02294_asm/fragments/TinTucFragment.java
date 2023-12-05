@@ -13,12 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.nguyendinhtrung_pk02294_asm.R;
 import com.example.nguyendinhtrung_pk02294_asm.activities.LoginActivity;
 import com.example.nguyendinhtrung_pk02294_asm.activities.MainActivity;
+import com.example.nguyendinhtrung_pk02294_asm.activities.ThayDoiActivity;
 import com.example.nguyendinhtrung_pk02294_asm.adapters.NewsAdapter;
 import com.example.nguyendinhtrung_pk02294_asm.helpers.IRetrofitRouter;
 import com.example.nguyendinhtrung_pk02294_asm.helpers.RetrofitHelper;
@@ -35,9 +39,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TinTucFragment extends Fragment {
+    ImageView avatarImageView;
     ListView lvNews;
     List<NewsModelResponse> list;
     NewsAdapter adapter;
+    TextView ndtText;
 
     IRetrofitRouter iRetrofitRouter;
 
@@ -46,6 +52,8 @@ public class TinTucFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tin_tuc, container, false);
 
         lvNews = view.findViewById(R.id.newsListView);
+        avatarImageView = view.findViewById(R.id.avatarImageView);
+        ndtText = view.findViewById(R.id.ndtText);
 
         list = new ArrayList<>();
         adapter = new NewsAdapter(list);
@@ -58,6 +66,14 @@ public class TinTucFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 NewsModelResponse selectedNewsModel = (NewsModelResponse) adapter.getItem(position);
                 fetchNewsDetail(selectedNewsModel.getId());
+            }
+        });
+
+        avatarImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ThayDoiActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -99,7 +115,20 @@ public class TinTucFragment extends Fragment {
     public void onResume() {
         super.onResume();
         iRetrofitRouter.getNews().enqueue(getNewsCallback);
+
+        // Get SharedPreferences from the parent activity
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginStatus", MODE_PRIVATE);
+        String avatar = sharedPreferences.getString("avatar", "");
+        String name = sharedPreferences.getString("name", "");
+
+        // Set EditText values
+        Glide.with(this)
+                .load(avatar)
+                .into(avatarImageView);
+        ndtText.setText(name);
+
     }
+
 
     Callback<List<NewsModelResponse>> getNewsCallback = new Callback<List<NewsModelResponse>>() {
         @Override

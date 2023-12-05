@@ -25,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.nguyendinhtrung_pk02294_asm.R;
 import com.example.nguyendinhtrung_pk02294_asm.activities.LoginActivity;
 import com.example.nguyendinhtrung_pk02294_asm.activities.ThayDoiActivity;
@@ -36,8 +37,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class TienIchFragment extends Fragment {
+    ImageView avatarImageView;
     LinearLayout lnCapNhap, lnLogout, lnDoiMK, lnQuenMK;
     TextView txtThayDoi;
+    TextView ndtText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +51,8 @@ public class TienIchFragment extends Fragment {
         lnDoiMK = view.findViewById(R.id.lnDoiMK);
         lnQuenMK = view.findViewById(R.id.lnQuenMK);
         txtThayDoi = view.findViewById(R.id.txtThayDoi);
+        avatarImageView = view.findViewById(R.id.avatarImageView);
+        ndtText = view.findViewById(R.id.ndtText);
 
         lnCapNhap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +97,22 @@ public class TienIchFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Get SharedPreferences from the parent activity
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("loginStatus", MODE_PRIVATE);
+        String avatar = sharedPreferences.getString("avatar", "");
+        String name = sharedPreferences.getString("name", "");
+
+        // Set EditText values
+        Glide.with(this)
+                .load(avatar)
+                .into(avatarImageView);
+        ndtText.setText(name);
     }
 
     private void clearLoginStatus() {

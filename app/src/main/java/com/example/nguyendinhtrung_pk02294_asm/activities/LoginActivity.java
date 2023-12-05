@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     Button btnRegister, btnLogin;
     TextView forgetPass;
     Spinner spinner;
+    ProgressBar progressBar;
 
     IRetrofitRouter iRetrofitRouter;
 
@@ -163,11 +164,13 @@ public class LoginActivity extends AppCompatActivity {
                     // Retrieve user email and name
                     String email = loginResponseDTO.getUser().getEmail();
                     String name = loginResponseDTO.getUser().getName();
+                    String avatar = loginResponseDTO.getUser().getAvatar();
 
                     // Save information to SharedPreferences
                     SharedPreferences.Editor editor = getSharedPreferences("loginStatus", MODE_PRIVATE).edit();
                     editor.putString("email", email);
                     editor.putString("name", name);
+                    editor.putString("avatar", avatar);
                     editor.apply();
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -250,7 +253,6 @@ public class LoginActivity extends AppCompatActivity {
                 UserRegister loginResponseDTO = response.body();
                 if (loginResponseDTO.getStatus()) {
                     Toast.makeText(LoginActivity.this, "Đã gửi email lấy lại mật khẩu thành công!!!", Toast.LENGTH_LONG).show();
-                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Failed!!!", Toast.LENGTH_LONG).show();
                 }

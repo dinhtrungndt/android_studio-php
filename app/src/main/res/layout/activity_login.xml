@@ -99,8 +99,8 @@
             android:textColor="@color/black"
             android:paddingLeft="35dp"
             android:paddingTop="5dp"/>
-    </LinearLayout>
 
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnLogin"

@@ -168,10 +168,6 @@ public class RegisterActivity extends AppCompatActivity {
             if (response.isSuccessful()){
                 UserLoginResponse regisResponseDTO = response.body();
                 if (regisResponseDTO != null && regisResponseDTO.getStatus()) {
-                    Toast.makeText(RegisterActivity.this, "Registration Success!!!", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
                 } else {
                     Toast.makeText(RegisterActivity.this, "Registration Failed!!!", Toast.LENGTH_LONG).show();
                 }

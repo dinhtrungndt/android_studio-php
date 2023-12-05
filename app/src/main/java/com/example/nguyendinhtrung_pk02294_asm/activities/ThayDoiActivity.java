@@ -33,11 +33,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ThayDoiActivity extends AppCompatActivity {
-    ImageView cloneTab, imgAvatar,imgSave;
-    EditText edtEmail,edtName,edtPassword;
+    ImageView cloneTab, imgAvatar, imgSave;
+    EditText edtEmail, edtName, edtPassword;
     private Uri selectedImageUri;
     private String imageUrl;
-    private int id;
 
     IRetrofitRouter iRetrofitRouter;
 
@@ -123,14 +122,17 @@ public class ThayDoiActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("loginStatus", MODE_PRIVATE);
         String email = sharedPreferences.getString("email", "");
         String name = sharedPreferences.getString("name", "");
+        String avatar = sharedPreferences.getString("avatar", "");
 
         // Set EditText values
+        Glide.with(this)
+                .load(avatar)
+                .into(imgAvatar);
         edtEmail.setText(email);
         edtName.setText(name);
         edtPassword.setText("*");
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -146,7 +148,7 @@ public class ThayDoiActivity extends AppCompatActivity {
             // Tải ảnh lên Cloudinary
             MediaManager.get().upload(selectedImageUri)
                     .unsigned("myfpt_ki6_androidstudio") // Thay "your_unsigned_preset" bằng unsigned preset của bạn
-                    .option("public_id111", "public_id111") // Thay "your_public_id" bằng public_id của bạn (tùy chọn)
+                    .option("public_id1113434", "public_id1113434") // Thay "your_public_id" bằng public_id của bạn (tùy chọn)
                     .option("cloud_name", cloudName) // Sử dụng cloud_name đã đọc từ resources
                     .callback(new UploadCallback() {
                         @Override
@@ -169,7 +171,8 @@ public class ThayDoiActivity extends AppCompatActivity {
                                     .load(imageUrl)
                                     .into(imgAvatar);
 
-                            // Set the background of the ImageView to null (remove the current background drawable)
+                            // Set the background of the ImageView to null (remove the current background
+                            // drawable)
                             imgAvatar.setBackground(null);
 
                             Log.d(TAG, ">>>>>>>>>>>>>>>> 141 " + imageUrl);
@@ -192,7 +195,7 @@ public class ThayDoiActivity extends AppCompatActivity {
     Callback<UserLoginResponse> putCallback = new Callback<UserLoginResponse>() {
         @Override
         public void onResponse(Call<UserLoginResponse> call, Response<UserLoginResponse> response) {
-            if (response.isSuccessful()){
+            if (response.isSuccessful()) {
                 UserLoginResponse regisResponseDTO = response.body();
                 if (regisResponseDTO != null && regisResponseDTO.getStatus() != null && regisResponseDTO.getStatus()) {
                     Toast.makeText(ThayDoiActivity.this, "Registration Success!!!", Toast.LENGTH_LONG).show();
